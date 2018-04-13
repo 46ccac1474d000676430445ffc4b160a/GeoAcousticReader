@@ -15,7 +15,7 @@ class Runner : public QObject
 {
     Q_OBJECT
 
-    QString m_stitchedFilesPath;
+    QString m_convertedFilesPath;
 
     QStringList m_fileNameList;
 
@@ -24,7 +24,7 @@ class Runner : public QObject
 public:
     explicit Runner(int argc, char *argv[], QObject *parent = nullptr);
 
-    QString stitchedFilesPath() const;
+    QString convertedFilesPath() const;
 
 public slots:
     void run(QChar fileType);

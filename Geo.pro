@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    FileStitcher \
+    Translator \
     Geo_components_Stitcher

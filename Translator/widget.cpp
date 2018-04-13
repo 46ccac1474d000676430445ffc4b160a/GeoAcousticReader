@@ -48,7 +48,7 @@ void Widget::closeEvent(QCloseEvent *event)
 
 Widget::Widget(int argc, char *argv[], QWidget *parent) :
     QWidget(parent, Qt::Dialog),
-    m_stitchedFilesPath(argc >= 2 ? argv[2] : nullptr),
+    m_convertedFilesPath(argc >= 2 ? argv[2] : nullptr),
     m_outputConsole(new QTextEdit()),
     m_progressBar(new QProgressBar()),
     m_saveBut(new QToolButton()),
@@ -91,7 +91,7 @@ Widget::Widget(int argc, char *argv[], QWidget *parent) :
     connect(m_runner, &Runner::finished, t, &QThread::quit, Qt::DirectConnection);
     connect(t, &QThread::finished, t, &QThread::quit, Qt::DirectConnection);
 
-    t->start(QThread::LowestPriority);
+    t->start(QThread::TimeCriticalPriority);
 
     connect(m_runner, &Runner::sizeCounted, m_progressBar, &QProgressBar::setMaximum);
     connect(m_runner, &Runner::curentElement, m_progressBar, &QProgressBar::setValue);
@@ -111,7 +111,7 @@ Widget::~Widget()
 
 void Widget::saveLog()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Save as...", m_stitchedFilesPath + QString("/%1.log").arg(QDateTime::currentDateTime().toString("dd-MM-yyyy, hh-mm-ss")));
+    QString fileName = QFileDialog::getSaveFileName(this, "Save as...", m_convertedFilesPath + QString("/%1.log").arg(QDateTime::currentDateTime().toString("dd-MM-yyyy, hh-mm-ss")));
 
     if (!fileName.isEmpty())
     {

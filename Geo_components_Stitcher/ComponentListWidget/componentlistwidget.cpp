@@ -42,19 +42,19 @@ void ComponentListWidget::on_SaveButClicked()
     params.insert(1, fileName);
 
 #ifdef Q_OS_LINUX
-    QString fileStitcherPath = "./FileStitcher";
+    QString fileStitcherPath = "./Translator";
 #endif
 #ifdef Q_OS_WIN
-    QString fileStitcherPath = "FileStitcher.exe";
+    QString fileStitcherPath = "Translator.exe";
 #endif
 
     if (QProcess::startDetached(fileStitcherPath, params))
     {
-        qDebug() << "FileStitcher started";
+        qDebug() << "Translator started";
     }
     else
     {
-        qDebug() << "Error! FileStitcher not started";
+        qDebug() << "Error! Translator not started";
         QMessageBox::warning(this, "Fatal!", QString("Process \"%1\" not started!").arg(fileStitcherPath));
     }
 }

@@ -23,7 +23,7 @@ class Widget : public QWidget
 {
     Q_OBJECT
 
-    QString m_stitchedFilesPath;
+    QString m_convertedFilesPath;
 
     QTextEdit *m_outputConsole;
 

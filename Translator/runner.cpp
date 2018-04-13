@@ -1,9 +1,9 @@
 #include "runner.h"
 #include <cstring>
 
-QString Runner::stitchedFilesPath() const
+QString Runner::convertedFilesPath() const
 {
-    return m_stitchedFilesPath;
+    return m_convertedFilesPath;
 }
 
 qint64 Runner::getCommonSize()
@@ -20,7 +20,7 @@ qint64 Runner::getCommonSize()
 
 Runner::Runner(int argc, char *argv[], QObject *parent) :
     QObject(parent),
-    m_stitchedFilesPath(argv[2])
+    m_convertedFilesPath(argv[2])
 {
     for (int i = 3; i < argc; i++)
     {
@@ -64,7 +64,7 @@ void Runner::run(QChar fileType)
         QFile fread(var.fileName());
         QFile fwrite;
 
-        QString wrFileName = m_stitchedFilesPath + QString("/[%1] - [%2].%3")
+        QString wrFileName = m_convertedFilesPath + QString("/[%1] - [%2].%3")
                 .arg(var.startTime().toString("dd-MM-yyyy, hh-mm-ss"))
                 .arg(var.endTime().toString("dd-MM-yyyy, hh-mm-ss"))
                 .arg(fileType.toUpper().toLatin1() == 'T' ? "txt" : "bin");
@@ -72,7 +72,7 @@ void Runner::run(QChar fileType)
         QFileInfo fileInfo(wrFileName);
         if (fileInfo.exists())
         {
-            QString temp = m_stitchedFilesPath + QString("/[%1] - [%2] (#).%3")
+            QString temp = m_convertedFilesPath + QString("/[%1] - [%2] (#).%3")
                     .arg(var.startTime().toString("dd-MM-yyyy, hh-mm-ss"))
                     .arg(var.endTime().toString("dd-MM-yyyy, hh-mm-ss"))
                     .arg(fileType.toUpper().toLatin1() == 'T' ? "txt" : "bin");

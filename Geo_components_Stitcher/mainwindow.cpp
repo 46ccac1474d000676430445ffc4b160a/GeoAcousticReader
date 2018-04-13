@@ -18,7 +18,12 @@ void MainWindow::on_checkPathClicked()
     if (fInfo.exists() && fInfo.isDir())
     {
         QStringList pathList;
+
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+
         DirTraversal::traversal(m_pathEdit->text(), pathList);
+
+        QApplication::restoreOverrideCursor();
 
         QList<ComponentMetadata> XmetadataList;
         QList<ComponentMetadata> YmetadataList;

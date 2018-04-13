@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QApplication>
+
 #include <QMainWindow>
 #include <QTabWidget>
 #include <QLineEdit>
@@ -12,6 +14,7 @@
 #include <QAction>
 #include <QMenuBar>
 
+#include <QCursor>
 #include <QShortcut>
 
 #include <QVBoxLayout>

@@ -24,10 +24,10 @@ ExtListWidgetItem::ExtListWidgetItem(const QString &label) :
 }
 
 ExtListWidgetItem::ExtListWidgetItem(const ComponentMetadata &metadata) :
-    QListWidgetItem(QString(metadata.component()) + "  " +
+    QListWidgetItem(QString(metadata.component()) + " " +
                     metadata.startTime().toString("dd-MM-yyyy, hh:mm:ss") + " -> " +
-                    metadata.endTime().toString("dd-MM-yyyy, hh:mm:ss") + ",  frq: " +
-                    QString::number(metadata.frq()) + ",  file: \"" +
+                    metadata.endTime().toString("dd-MM-yyyy, hh:mm:ss") + ", frq: " +
+                    QString::number(metadata.frq()) + ", file: \"" +
                     metadata.fileName() + "\""
                     ),
     m_metadata(metadata)
@@ -35,5 +35,5 @@ ExtListWidgetItem::ExtListWidgetItem(const ComponentMetadata &metadata) :
     setFlags(flags() | Qt::ItemIsUserCheckable);
     setCheckState(Qt::Unchecked);
 
-    setFont(QFont("Monospace", 9));
+    setFont(QFont("Lucida Console", 9));
 }

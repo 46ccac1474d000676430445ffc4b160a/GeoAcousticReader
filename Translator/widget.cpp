@@ -56,11 +56,10 @@ Widget::Widget(int argc, char *argv[], QWidget *parent) :
 {
     if (argc < 4) throw std::runtime_error("Invalid argc value");
 
-    thread()->setPriority(QThread::HighestPriority);
-
     setWindowTitle(argv[2]);
 
     m_outputConsole->setReadOnly(true);
+    m_outputConsole->setFont(QFont("Lucida Console"));
 
     m_progressBar->setRange(0, 0);
     m_progressBar->setMinimumHeight(70);

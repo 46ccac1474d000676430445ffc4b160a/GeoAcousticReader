@@ -34,7 +34,9 @@ Runner::Runner(int argc, char *argv[], QObject *parent) :
 
 void Runner::run(QChar fileType)
 {
-    emit sendStringInfo(QString("Log\nStarted: %1.\n\n").arg(QDateTime::currentDateTime().toString("dd-MM-yyyy, h:mm:ss")));
+    emit sendStringInfo(QString("Log\nFile type: %1\nStarted: %2.\n\n")
+                        .arg(fileType.toUpper().toLatin1() == 'T' ? "text" : "binary")
+                        .arg(QDateTime::currentDateTime().toString("dd-MM-yyyy, h:mm:ss")));
 
     QList<ComponentMetadata> metadataList;
 
@@ -64,21 +66,25 @@ void Runner::run(QChar fileType)
         QFile fread(var.fileName());
         QFile fwrite;
 
-        QString wrFileName = m_convertedFilesPath + QString("/[%1] - [%2].%3")
+        QString wrFileName = m_convertedFilesPath + QString("/%1 [%2] - [%3] - %4 items.%5")
+                .arg(var.component())
                 .arg(var.startTime().toString("dd-MM-yyyy, hh-mm-ss"))
                 .arg(var.endTime().toString("dd-MM-yyyy, hh-mm-ss"))
+                .arg(fread.size()/2)
                 .arg(fileType.toUpper().toLatin1() == 'T' ? "txt" : "bin");
 
         QFileInfo fileInfo(wrFileName);
         if (fileInfo.exists())
         {
-            QString temp = m_convertedFilesPath + QString("/[%1] - [%2] (#).%3")
+            QString temp = m_convertedFilesPath + QString("/%1 [%2] - [%3] - %4 items (#).%5")
+                    .arg(var.component())
                     .arg(var.startTime().toString("dd-MM-yyyy, hh-mm-ss"))
                     .arg(var.endTime().toString("dd-MM-yyyy, hh-mm-ss"))
+                    .arg(fread.size()/2)
                     .arg(fileType.toUpper().toLatin1() == 'T' ? "txt" : "bin");
             temp.replace("#", "%1");
 
-            int t_c = 0;
+            int t_c = 1;
             do
             {
                 fileInfo.setFile(temp.arg(++t_c));
@@ -95,20 +101,21 @@ void Runner::run(QChar fileType)
         {
             if (fwrite.open(QIODevice::WriteOnly))
             {
-                emit sendStringInfo(QString("File: \"%1\",  frq: %2,  ")
+                emit sendStringInfo(QString("File: \"%1\", comp: %2, frq: %3, ")
                                     .arg(fwrite.fileName())
+                                    .arg(var.component())
                                     .arg(var.frq()));
 
                 qint64 size = fread.size() / 2;
 
                 if (fileType.toUpper().toLatin1() == 'T')
                 {
+                    QDataStream readFileStream(&fread);
+                    readFileStream.setByteOrder(QDataStream::LittleEndian);
                     for (int i = 0; i < size; i++)
                     {
-                        QDataStream s(&fread);
-                        s.setByteOrder(QDataStream::LittleEndian);
                         short t;
-                        s >> t;
+                        readFileStream >> t;
                         float flo = t * 2.325439e-001;
                         fwrite.write(QString().setNum(flo, 'f', 6).append("\n").toUtf8());
 
@@ -119,13 +126,15 @@ void Runner::run(QChar fileType)
                 else if (fileType.toUpper().toLatin1() == 'B')
                 {
                     QDataStream stFileStream(&fwrite);
+                    stFileStream.setByteOrder(QDataStream::LittleEndian);
                     stFileStream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+
+                    QDataStream readFileStream(&fread);
+                    readFileStream.setByteOrder(QDataStream::LittleEndian);
                     for (int i = 0; i < size; i++)
                     {
-                        QDataStream s(&fread);
-                        s.setByteOrder(QDataStream::LittleEndian);
                         short t;
-                        s >> t;
+                        readFileStream >> t;
                         float flo = t * 2.325439e-001;
                         stFileStream << flo;
 

@@ -6,15 +6,15 @@ ComponentMetadata ComponentMetadata::getMetaData(const QString &filename)
     QFile f(filename);
     if (f.open(QIODevice::ReadOnly))
     {
-        QString fileContent(f.read( f.size() > 1024 ? 1024 : f.size() ));
+        QString fileContent(f.read( f.size() > 4096 ? 4096 : f.size() )); //считывание содержимого лог-файла
         f.close();
 
 
 //  ***************************************
-        qint64 fileANAsize = -1;
+        qint64 fileANAsize = -1; //размер биарного файла
 
         QString fileANAname = filename;
-        fileANAname[fileANAname.size()-1] = 'a';
+        fileANAname[fileANAname.size()-1] = 'a'; //вычисление имени бинарного файла по имени его лог-файла
 
         QFileInfo fileANAinfo(fileANAname);
         if (fileANAinfo.exists())
@@ -33,7 +33,7 @@ ComponentMetadata ComponentMetadata::getMetaData(const QString &filename)
         fileContent.remove(QChar::Space);
         fileContent.remove("\r");
 
-        QChar component = QChar(fileContent[0]).toUpper();
+        QChar component = QChar(fileContent[0]).toUpper(); //чтение компоненты из лог-файла
         if (component != 'X' && component != 'Y' && component != 'Z')
         {
             return ComponentMetadata();
@@ -42,27 +42,27 @@ ComponentMetadata ComponentMetadata::getMetaData(const QString &filename)
         QDateTime startTime, endTime;
         double frq = std::numeric_limits<double>::quiet_NaN();  //set frq to NaN
 
-        QStringList strList = fileContent.split("\n");
+        QStringList strList = fileContent.split("\n"); //разбиение содержимого лог-файла на отдельные строки
         for (QString var : strList)
         {
             if ( var.startsWith("DATE", Qt::CaseInsensitive) )
             {
                 //qDebug() << var.mid(4);
-                startTime.setDate( QDate::fromString(var.mid(4), "dd-MM-yyyy") );
+                startTime.setDate( QDate::fromString(var.mid(4), "dd-MM-yyyy") ); //считывание даты начала запаси бинарного файла
             }
             else if ( var.startsWith("START", Qt::CaseInsensitive) )
             {
                 //qDebug() << var.mid(5);
-                startTime.setTime( QTime::fromString(var.mid(5), "h:mm:ss") );
+                startTime.setTime( QTime::fromString(var.mid(5), "h:mm:ss") ); //считывание времени начала записи бинарного файла
             }
             else if ( var.startsWith("FRQ", Qt::CaseInsensitive) )
             {
                 //qDebug() << var.mid(3);
-                frq = var.mid(3).toDouble();
+                frq = var.mid(3).toDouble(); //считывание частоты дискретизации
             }
         }
 
-        endTime = startTime.addSecs( (fileANAsize / 2) / frq );
+        endTime = startTime.addSecs( (fileANAsize / 2) / frq ); //вычисление даты и времени окончания записи бинарного файла по его размеру и частоте дискретизации
 
         return ComponentMetadata(startTime, endTime, component, frq, fileANAname);
     }
@@ -125,7 +125,7 @@ void ComponentMetadata::setFrq(double frq)
     m_frq = frq;
 }
 
-bool ComponentMetadata::isIncomplete()
+bool ComponentMetadata::isIncomplete() //проверка на полноту хранящихся данных
 {
     return m_startTime.isNull() || m_endTime.isNull() || m_component.isNull() || m_fileName.isEmpty() || std::isnan(m_frq);
 }

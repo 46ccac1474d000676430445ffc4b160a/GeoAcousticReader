@@ -2,8 +2,9 @@
 
 void ComponentListWidget::on_SaveButClicked()
 {
-    QStringList params;
+    QStringList params; //список параметров для запуска процесса (внешней программы) обработки и записи данных из бинарных файлов в текстовые/бинарные
 
+    //выбор формата записи в данных в файл
     if (m_toBinRadio->isChecked())
     {
         //BINARY
@@ -15,6 +16,7 @@ void ComponentListWidget::on_SaveButClicked()
         params << QString("T");
     }
 
+    //добавление всех выбранных элементов списка в очередь на запись
     for (int i = 0; i < m_componentList->count(); i++)
     {
         if (m_componentList->item(i)->checkState() == Qt::Checked)
@@ -32,15 +34,18 @@ void ComponentListWidget::on_SaveButClicked()
         return;
     }
 
-    QString fileName = QFileDialog::getExistingDirectory(this, "Save in folder", QDir::homePath());
+    //выбор папки сохранения
+    QString dirName = QFileDialog::getExistingDirectory(this, "Save in folder", QDir::homePath());
 
-    if (fileName.isEmpty())
+    if (dirName .isEmpty())
     {
         return;
     }
 
-    params.insert(1, fileName);
+    //добавление в список параметров для процесса записи имя папки сохранения
+    params.insert(1, dirName );
 
+//далее идёт запуск внешнего процесса обработки и записи данных
 #ifdef Q_OS_LINUX
     QString fileStitcherPath = "./Translator";
 #endif
@@ -55,7 +60,7 @@ void ComponentListWidget::on_SaveButClicked()
     else
     {
         qDebug() << "Error! Translator not started";
-        QMessageBox::warning(this, "Fatal!", QString("Process \"%1\" not started!").arg(fileStitcherPath));
+        QMessageBox::critical(this, "Fatal!", QString("Process \"%1\" not started!").arg(fileStitcherPath));
     }
 }
 
@@ -130,6 +135,8 @@ ComponentListWidget::ComponentListWidget(const QStringList &fileNameList, QWidge
     m_toTextRadio(new QRadioButton("&Text")),
     m_radioBox(new QGroupBox("Save data"))
 {
+//настройка интерфейса
+
     m_toBinRadio->setChecked(true);
     m_saveBut->setMaximumWidth(120);
 

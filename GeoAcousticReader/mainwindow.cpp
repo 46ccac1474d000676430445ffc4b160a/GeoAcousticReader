@@ -21,14 +21,16 @@ void MainWindow::on_checkPathClicked()
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
-        DirTraversal::traversal(m_pathEdit->text(), pathList);
+        DirTraversal::traversal(m_pathEdit->text(), pathList); //см. файл dirtraversal.cpp
 
         QApplication::restoreOverrideCursor();
 
+        //см. файл componentmetadata.h
         QList<ComponentMetadata> XmetadataList;
         QList<ComponentMetadata> YmetadataList;
         QList<ComponentMetadata> ZmetadataList;
 
+        //составление информационных списков о доступых бинарных файлах
         for (auto var : pathList)
         {
             ComponentMetadata temp = ComponentMetadata::getMetaData(var);
@@ -87,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_openDirShortcut(new QShortcut(QKeySequence("Ctrl+o"), this)),
     m_updateListsShortcut(new QShortcut(QKeySequence(Qt::Key_F5), this))
 {
+//настройка интерфейса и логики главного окна приложения
+
     connect(m_choosePathBut, &QToolButton::clicked, this, &MainWindow::on_choosePathClicked);
     connect(m_checkPathBut, &QToolButton::clicked, this, &MainWindow::on_checkPathClicked);
     connect(m_openDirShortcut, &QShortcut::activated, this, &MainWindow::on_choosePathClicked);

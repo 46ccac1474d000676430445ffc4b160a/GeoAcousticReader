@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Translator
 TEMPLATE = app
 
-QMAKE_LFLAGS = -static
+#win32:QMAKE_LFLAGS = -static
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

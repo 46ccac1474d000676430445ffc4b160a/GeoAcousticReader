@@ -90,8 +90,6 @@ Widget::Widget(int argc, char *argv[], QWidget *parent) :
     connect(m_runner, &Runner::finished, t, &QThread::quit, Qt::DirectConnection);
     connect(t, &QThread::finished, t, &QThread::quit, Qt::DirectConnection);
 
-    t->start(QThread::TimeCriticalPriority);
-
     connect(m_runner, &Runner::sizeCounted, m_progressBar, &QProgressBar::setMaximum);
     connect(m_runner, &Runner::curentElement, m_progressBar, &QProgressBar::setValue);
     connect(m_runner, &Runner::sendStringInfo, this, &Widget::getStringInfo);
@@ -101,6 +99,7 @@ Widget::Widget(int argc, char *argv[], QWidget *parent) :
 
     connect(m_saveBut, &QToolButton::clicked, this, &Widget::saveLog);
 
+    t->start(QThread::TimeCriticalPriority);
     run(*argv[1]);
 }
 

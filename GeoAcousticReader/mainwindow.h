@@ -40,9 +40,9 @@ class MainWindow : public QMainWindow
     QToolButton *m_choosePathBut,
                 *m_checkPathBut;
 
-    ComponentListWidget *m_XCompList,
-                        *m_YCompList,
-                        *m_ZCompList;
+    ComponentListWidget *m_XCompList, //представление списка по X-компоненте
+                        *m_YCompList, //представление списка по Y-компоненте
+                        *m_ZCompList; //представление списка по Z-компоненте
 
     QShortcut *m_openDirShortcut,
               *m_updateListsShortcut;
@@ -53,8 +53,8 @@ class MainWindow : public QMainWindow
             *m_quitAction;
 
 public slots:
-    void on_choosePathClicked();
-    void on_checkPathClicked();
+    void on_choosePathClicked(); //слот обработки события выбора корневого каталога
+    void on_checkPathClicked(); //слот обхода корневого каталога и его подкаталогов
 
 public:
     MainWindow(QWidget *parent = 0);
